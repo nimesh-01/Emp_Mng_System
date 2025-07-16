@@ -2,10 +2,10 @@
 import React from 'react';
 import Header from './Header';
 
-const AdminDash = () => {
+const AdminDash = ({data}) => {
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4 sm:p-10">
-      <Header/>
+      <Header data={data} />
 
       {/* Task Form */}
       <div className="bg-gray-800 p-4 rounded-lg grid gap-6 sm:grid-cols-2 sm:gap-x-8">

@@ -15,30 +15,39 @@ const App = () => {
   const [userData, setUserData] = useContext(AuthContext)
   useEffect(() => {
     if (userData) {
-      const logedInUser = localStorage.getItem("logedInUser")
+      const logedUser = localStorage.getItem("logedInUser")
+      const usData = JSON.parse(logedUser)
+      console.log(usData);
+      
+      if (usData) {
+        console.log(usData);
 
-      const userData = JSON.parse(logedInUser)
-      if (userData) {
-        console.log(userData);
-        
-        setUser(userData.role)
-        setlogedInUser(userData.data)  
+        setUser(usData.role)
+        setlogedInUser(usData.data)
 
+      }
+      else{
+        setUser(null)
       }
     }
   }, [])
 
   const handleLogin = (email, password) => {
-    if (email == "admin@example.com" && password == '123') {
+    if (email == "admin@ex.com" && password == '123') {
       localStorage.setItem("logedInUser", JSON.stringify({ role: 'admin' }))
       console.log("Admin login");
-      setUser('admin')
+      setlogedInUser(JSON.parse(localStorage.getItem('admin'))[0])
+      setUser({ role: 'admin' })
 
     }
-    else if (userData && userData.find((e) => e.email == email && e.password == password)) {
-      console.log("Emloyee login");
-      localStorage.setItem("logedInUser", JSON.stringify({ role: 'employee' }))
-      setUser('emloyee')
+    else if (userData) {
+      const employee = userData.find((e) => e.email == email && e.password == password)
+      if (employee) {
+        console.log("Emloyee login");
+        setlogedInUser(employee)
+        setUser({ role: 'employee' })
+        localStorage.setItem("logedInUser", JSON.stringify({ role: 'employee' }))
+      }
     }
     else {
       alert("Invalid Credentials...")
@@ -48,10 +57,7 @@ const App = () => {
   return (
     <>
 
-      {!user ? <Login handleLogin={handleLogin} /> : ""}
-      {user == 'admin' ? <AdminDash /> : <EmpDash />}
-      {/* <EmpDash/> */}
-      {/* <EmpDash/> */}
+      {!user ? <Login handleLogin={handleLogin} /> : user.role == 'admin' ? <AdminDash data={logedInUser}  /> : <EmpDash data={logedInUser} />}
     </>
   )
 }
